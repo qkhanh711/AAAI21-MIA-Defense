@@ -5,6 +5,8 @@ import torchvision
 import torchvision.transforms as transforms
 import numpy as np
 from misc import *   
+import torch.nn.functional as F
+
 
 __all__ = ['make_image', 'show_batch', 'show_mask', 'show_mask_single']
 
@@ -58,7 +60,7 @@ def show_mask_single(images, mask, Mean=(2, 2, 2), Std=(0.5,0.5,0.5)):
     #     mask[b] = (mask[b] - mask[b].min())/(mask[b].max() - mask[b].min())
     mask_size = mask.size(2)
     # print('Max %f Min %f' % (mask.max(), mask.min()))
-    mask = (upsampling(mask, scale_factor=im_size/mask_size))
+    mask = (F.interpolate()(mask, scale_factor=im_size/mask_size))
     # mask = colorize(upsampling(mask, scale_factor=im_size/mask_size))
     # for c in range(3):
     #     mask[:,c,:,:] = (mask[:,c,:,:] - Mean[c])/Std[c]
@@ -89,7 +91,7 @@ def show_mask(images, masklist, Mean=(2, 2, 2), Std=(0.5,0.5,0.5)):
         #     mask[b] = (mask[b] - mask[b].min())/(mask[b].max() - mask[b].min())
         mask_size = mask.size(2)
         # print('Max %f Min %f' % (mask.max(), mask.min()))
-        mask = (upsampling(mask, scale_factor=im_size/mask_size))
+        mask = (F.interpolate()(mask, scale_factor=im_size/mask_size))
         # mask = colorize(upsampling(mask, scale_factor=im_size/mask_size))
         # for c in range(3):
         #     mask[:,c,:,:] = (mask[:,c,:,:] - Mean[c])/Std[c]
@@ -103,8 +105,8 @@ def show_mask(images, masklist, Mean=(2, 2, 2), Std=(0.5,0.5,0.5)):
 
 
 
-# x = torch.zeros(1, 3, 3)
-# out = colorize(x)
-# out_im = make_image(out)
-# plt.imshow(out_im)
-# plt.show()
+x = torch.zeros(1, 3, 3)
+out = colorize(x)
+out_im = make_image(out)
+plt.imshow(out_im)
+plt.show()
