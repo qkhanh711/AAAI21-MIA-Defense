@@ -61,7 +61,7 @@ def main():
     
     elif args.defence=='advtune':
         print('Processing adversarial regularization defence')
-        advtune_defense(args.train,args.evaluate,args.tr_len,args.ref_len,args.use_cuda,args.batch_size,args.alpha,args.lr,args.schedule,args.gamma,args.tr_epochs,args.at_lr,args.at_schedule,args.at_gamma,args.at_epochs,args.n_classes):
+        advtune_defense(args.train,args.evaluate,args.tr_len,args.ref_len,args.use_cuda,args.batch_size,args.alpha,args.lr,args.schedule,args.gamma,args.tr_epochs,args.at_lr,args.at_schedule,args.at_gamma,args.at_epochs,args.n_classes)
     
     else:
         assert False, 'Unknown defence... Exiting!'

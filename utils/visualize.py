@@ -5,6 +5,7 @@ import torchvision
 import torchvision.transforms as transforms
 import numpy as np
 from misc import *   
+from torch.nn.functional import interpolate as upsampling
 
 __all__ = ['make_image', 'show_batch', 'show_mask', 'show_mask_single']
 

@@ -72,7 +72,8 @@ def distillation_defense(train=1,defense=1,evaluate=1,tr_len=20000,ref_len=20000
 
     print('Training a non-private model...')
 
-    model=PurchaseClassifier()    	model=model.cuda()
+    model=PurchaseClassifier()    	
+    model=model.cuda()
     optimizer=optim.Adam(model.parameters(), lr=lr)
     criterion=nn.CrossEntropyLoss()
 
@@ -167,7 +168,7 @@ def distillation_defense(train=1,defense=1,evaluate=1,tr_len=20000,ref_len=20000
     for epoch in range(distil_epochs):
         if epoch in distil_schedule:
             distil_lr *= distil_gamma
-               if debug_=='HIGH': print('----> Epoch %d Public lr %f'%(epoch,distil_lr))
+            if debug_=='HIGH': print('----> Epoch %d Public lr %f'%(epoch,distil_lr))
 
         distil_optimizer=optim.SGD(distil_model.parameters(), lr=distil_lr, momentum=0.99, weight_decay=0.000001)
 
