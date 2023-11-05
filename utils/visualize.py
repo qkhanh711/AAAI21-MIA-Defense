@@ -104,8 +104,9 @@ def show_mask(images, masklist, Mean=(2, 2, 2), Std=(0.5,0.5,0.5)):
 
 
 
-# x = torch.zeros(1, 3, 3)
-# out = colorize(x)
-# out_im = make_image(out)
-# plt.imshow(out_im)
-# plt.show()
+x = torch.zeros(1, 3, 3)
+out = colorize(x)
+out_im = make_image(out)
+print(out_im)
+plt.imshow(out_im)
+plt.show()

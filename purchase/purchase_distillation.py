@@ -8,7 +8,7 @@ def distillation_defense(train=1,defense=1,evaluate=1,tr_len=20000,ref_len=20000
 
     print('generating data for distillation defense...')
 
-    data_loc='/mnt/nfs/work1/amir/vshejwalkar/purchase_data/dataset_purchase'
+    data_loc='Khanh/AAAI21-MIA-Defense/purchase_data/dataset_purchase'
     tr_frac=0.5
     val_frac=0.25
     te_frac=0.25
