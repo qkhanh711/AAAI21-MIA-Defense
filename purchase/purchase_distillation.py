@@ -1,14 +1,16 @@
 from purchase_models import *
+from purchase_normal_train import train, test
+from purchase_util import *
+from purchase_attack_train import train_attack, test_attack
 
-
-def distillation_defense(train=1,defense=1,evaluate=1,tr_len=20000,ref_len=20000,use_cuda=True,batch_size=64,lr=0.0005,schedule=[30,80],gamma=0.5,tr_epochs=100,distil_batch_size=32,distil_lr=0.1,distil_schedule=[50,90,150],distil_gamma=0.5,distil_epochs=200,distil_temp=1.0,
-    at_lr=0.0001,at_schedule=[100],at_gamma=0.5,at_epochs=200,n_classes=100):
+def distillation_defense(train0=1,defense0=1,evaluate=1,tr_len=20000,ref_len=20000,use_cuda=True,batch_size=64,lr=0.0005,schedule=[30,80],gamma=0.5,tr_epochs=100,distil_batch_size=32,distil_lr=0.1,distil_schedule=[50,90,150],distil_gamma=0.5,distil_epochs=200,distil_temp=1.0,
+    at_lr=0.0001,at_schedule=[100],at_gamma=0.5,at_epochs=200,n_classes=100, debug_ = "MEDIUM"):
 
     ############################################################ data loading ############################################################
 
     print('generating data for distillation defense...')
 
-    data_loc='Khanh/AAAI21-MIA-Defense/purchase_data/dataset_purchase'
+    data_loc='home/khanhhiep/Code/Khanh/Security/AAAI21-MIA-Defense/purchase_data/'
     tr_frac=0.5
     val_frac=0.25
     te_frac=0.25
@@ -217,7 +219,7 @@ def distillation_defense(train=1,defense=1,evaluate=1,tr_len=20000,ref_len=20000
     best_model=best_model.cuda()
     best_opt=optim.Adam(best_model.parameters(), lr=0.001)
 
-    resume_best=checkpoint_dir+'/distil_mdoel_best_ref_%d_temp_%d.pth.tar'%(ref_data_len,t_softmax)
+    # resume_best=checkpoint_dir+'/distil_mdoel_best_ref_%d_temp_%d.pth.tar'%(ref_data_len,t_softmax)
 
     assert os.path.isfile(resume_best), 'Error: no checkpoint directory found for best model'
     checkpoint = os.path.dirname(resume_best)
