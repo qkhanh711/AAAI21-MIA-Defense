@@ -1,5 +1,10 @@
 from purchase_models import *
 
+import os
+
+# cwd = os.getcwd()
+# print(cwd)
+
 '''
 The function will import data from given location and distribute per_user_data_len amount of 
 data to each user.
@@ -9,7 +14,7 @@ args:
 '''
 
 def get_data_purchase(data_dir,
-                      data_loc='/mnt/nfs/work1/amir/vshejwalkar/purchase_data/dataset_purchase',
+                      data_loc='Khanh/AAAI21-MIA-Defense/purchase_data/dataset_purchase',
                       learn_type='cronus_',
                       num_users=8,
                       per_user_data_len=10000,
@@ -50,12 +55,12 @@ def get_data_purchase(data_dir,
     Y = (data_set[:,0]).astype(np.int32)-1
     print('total data len: ',len(X))
 
-    if not os.path.isfile('/mnt/nfs/work1/amir/vshejwalkar/purchase/purchase_initial_shuffle.pkl'):
+    if not os.path.isfile('Khanh/AAAI21-MIA-Defense/purchase/purchase_initial_shuffle.pkl'):
         all_indices = np.arange(len(X))
         np.random.shuffle(all_indices)
-        pickle.dump(all_indices,open('/mnt/nfs/work1/amir/vshejwalkar/purchase/purchase_initial_shuffle.pkl','wb'))
+        pickle.dump(all_indices,open('Khanh/AAAI21-MIA-Defense/purchase/purchase_initial_shuffle.pkl','wb'))
     else:
-        all_indices=pickle.load(open('/mnt/nfs/work1/amir/vshejwalkar/purchase/purchase_initial_shuffle.pkl','rb'))
+        all_indices=pickle.load(open('Khanh/AAAI21-MIA-Defense/purchase/purchase_initial_shuffle.pkl','rb'))
 
     if data_type=='eq_size':
         print('per_user_data %d, pub_data %d, test_data %d'%(per_user_data_len,pub_len,test_len))
@@ -94,12 +99,12 @@ def get_data_purchase(data_dir,
         
         elif attack_type=='backdoor':
             
-            if not os.path.isfile('/mnt/nfs/work1/amir/vshejwalkar/purchase/%d_backdoor_pattern.pkl'):
+            if not os.path.isfile('Khanh/AAAI21-MIA-Defense//purchase/%d_backdoor_pattern.pkl'):
                 backdoor_pattern=np.arange(600)
                 np.random.shuffle(backdoor_pattern)
-                pickle.dump(backdoor_pattern,open('/mnt/nfs/work1/amir/vshejwalkar/purchase/%d_backdoor_patterns.pkl'%backdoor_num_patterns,'wb'))
+                pickle.dump(backdoor_pattern,open('Khanh/AAAI21-MIA-Defense/purchase/%d_backdoor_patterns.pkl'%backdoor_num_patterns,'wb'))
             else:
-                backdoor_pattern = pickle.load(open('/mnt/nfs/work1/amir/vshejwalkar/purchase/%d_backdoor_patterns.pkl'%backdoor_num_patterns,'rb'))
+                backdoor_pattern = pickle.load(open('Khanh/AAAI21-MIA-Defense/purchase/%d_backdoor_patterns.pkl'%backdoor_num_patterns,'rb'))
                 
             if backdoor_single_class:
                 df=pd.DataFrame(data_set)

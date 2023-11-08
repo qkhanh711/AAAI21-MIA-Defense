@@ -23,8 +23,8 @@ def advtune_defense(train=1,evaluate=1,tr_len=20000,ref_len=20000,use_cuda=True,
            all_indices = np.arange(len(X))
            np.random.shuffle(all_indices)
            pickle.dump(all_indices,open('./purchase_shuffle.pkl','wb'))
-       else:
-           all_indices=pickle.load(open('./purchase_shuffle.pkl','rb'))
+    else:
+        all_indices=pickle.load(open('./purchase_shuffle.pkl','rb'))
 
     np.random.shuffle(all_indices)
 
@@ -59,7 +59,7 @@ def advtune_defense(train=1,evaluate=1,tr_len=20000,ref_len=20000,use_cuda=True,
     ref_label_tensor=torch.from_numpy(ref_label).type(torch.LongTensor)
 
     val_data_tensor=torch.from_numpy(val_data).type(torch.FloatTensor)
-    val_label_tensor=torch.from_numpy(val_label).type(torch.LongTensor)    
+    val_label_tensor=torch.from_numpy(val_label).type(torch.LongTensor)
     te_data_tensor=torch.from_numpy(te_data).type(torch.FloatTensor)
     te_label_tensor=torch.from_numpy(te_label).type(torch.LongTensor)
 
@@ -81,9 +81,9 @@ def advtune_defense(train=1,evaluate=1,tr_len=20000,ref_len=20000,use_cuda=True,
     attack_criterion=nn.MSELoss()
 
     checkpoint_dir='./checkpoints_advtun'
-
+    num_epochs = 10
     best_acc=0
-    best_test_acc=0    
+    best_test_acc=0
     for epoch in range(num_epochs):
         if epoch in schedule:
             for param_group in optimizer.param_groups:
@@ -96,12 +96,12 @@ def advtune_defense(train=1,evaluate=1,tr_len=20000,ref_len=20000,use_cuda=True,
 
             for i in range(1):
                 train_loss, train_acc = train(tr_cls_data_tensor,tr_cls_label_tensor,
-                                              model,criterion,optimizer,epoch,use_cuda,debug_='MEDIUM')    
-            test_loss, test_acc = test(te_data_tensor,te_label_tensor,model,criterion,use_cuda)    
-               for i in range(5):
-                at_loss, at_acc = train_attack(tr_cls_data_tensor,tr_cls_label_tensor,
+                                              model,criterion,optimizer,epoch,use_cuda,debug_='MEDIUM')
+                test_loss, test_acc = test(te_data_tensor,te_label_tensor,model,criterion,use_cuda)
+                for i in range(5):
+                    at_loss, at_acc = train_attack(tr_cls_data_tensor,tr_cls_label_tensor,
                                                ref_data_tensor,ref_label_tensor,model,attack_model,criterion,
-                                               attack_criterion,optimizer,attack_optimizer,epoch,use_cuda,debug_='MEDIUM')    
+                                               attack_criterion,optimizer,attack_optimizer,epoch,use_cuda,debug_='MEDIUM')
 
             if debug_=='HIGH': print('Initial test acc {} train att acc {}'.format(test_acc, at_acc))
 
@@ -127,38 +127,38 @@ def advtune_defense(train=1,evaluate=1,tr_len=20000,ref_len=20000,use_cuda=True,
                                                  attack_model,criterion,optimizer,epoch,use_cuda,
                                                  2,(2*i)%c_batches,alpha=alpha,batch_size=batch_size)
 
-            train_loss,train_acc = test(tr_cls_data_tensor,tr_cls_label_tensor,model,criterion,use_cuda)
-               val_loss, val_acc = test(val_data_tensor,val_label_tensor,model,criterion,use_cuda)
-           is_best = (val_acc > best_acc)
+                train_loss,train_acc = test(tr_cls_data_tensor,tr_cls_label_tensor,model,criterion,use_cuda)
+                val_loss, val_acc = test(val_data_tensor,val_label_tensor,model,criterion,use_cuda)
+                is_best = (val_acc > best_acc)
 
-               if is_best:
-                   _, best_test_acc = test(te_data_tensor,te_label_tensor,model,criterion,use_cuda)
+                if is_best:
+                    _, best_test_acc = test(te_data_tensor,te_label_tensor,model,criterion,use_cuda)
 
-           best_acc=max(val_acc, best_acc)
+            best_acc=max(val_acc, best_acc)
 
-               at_val_loss, at_val_acc = test_attack(tr_cls_te_at_data_tensor,tr_cls_te_at_label_tensor,
+            at_val_loss, at_val_acc = test_attack(tr_cls_te_at_data_tensor,tr_cls_te_at_label_tensor,
                                                      te_data_tensor,te_label_tensor,
                                                      model,attack_model,criterion,attack_criterion,
                                                      optimizer,attack_optimizer,epoch,use_cuda,debug_='MEDIUM')
-            
-               att_epoch_acc = np.mean(att_accs)
-             
-               if True:
-                   save_checkpoint_global(
-                       {
-                           'epoch': epoch,
-                           'state_dict': model.state_dict(),
-                           'acc': val_acc,
-                           'best_acc': best_acc,
-                           'optimizer': optimizer.state_dict(),
-                       },
-                       is_best,
-                       checkpoint=checkpoint_dir,
-                       filename='checkpoint_l_%d_tr_%d_ref_%d.pth.tar'%(alpha,tr_data_len,ref_data_len),
-                       best_filename='mdoel_best_l_%d_tr_%d_ref_%d.pth.tar'%(alpha,tr_data_len,ref_data_len),
-                   )
-            
-               print('epoch %d | tr_acc %.2f | val acc %.2f | best val acc %.2f | best te acc %.2f | attack avg acc %.2f | attack val acc %.2f'%(epoch,train_acc,val_acc,best_acc,best_test_acc,att_epoch_acc,at_val_acc))
+
+            att_epoch_acc = np.mean(att_accs)
+
+            if True:
+                save_checkpoint_global(
+                    {
+                        'epoch': epoch,
+                        'state_dict': model.state_dict(),
+                        'acc': val_acc,
+                        'best_acc': best_acc,
+                        'optimizer': optimizer.state_dict(),
+                    },
+                    is_best,
+                    checkpoint=checkpoint_dir,
+                    filename='checkpoint_l_%d_tr_%d_ref_%d.pth.tar'%(alpha,tr_data_len,ref_data_len),
+                    best_filename='mdoel_best_l_%d_tr_%d_ref_%d.pth.tar'%(alpha,tr_data_len,ref_data_len),
+                )
+
+            print('epoch %d | tr_acc %.2f | val acc %.2f | best val acc %.2f | best te acc %.2f | attack avg acc %.2f | attack val acc %.2f'%(epoch,train_acc,val_acc,best_acc,best_test_acc,att_epoch_acc,at_val_acc))
 
     ############################################################ private training ############################################################
 
@@ -182,17 +182,17 @@ def advtune_defense(train=1,evaluate=1,tr_len=20000,ref_len=20000,use_cuda=True,
     best_model.load_state_dict(checkpoint['state_dict'])
 
     for epoch in range(at_epochs):
-        
+
         at_loss, at_acc = train_attack(tr_cls_tr_at_data_tensor,tr_cls_tr_at_label_tensor,
                                        ref_data_tensor,ref_label_tensor,
                                        best_model,attack_model,criterion,attack_criterion,best_opt,
-                                       attack_optimizer,epoch,use_cuda,batch_size=32)    
-        
+                                       attack_optimizer,epoch,use_cuda,batch_size=32)
+
         at_val_loss, at_val_acc = test_attack(tr_cls_val_at_data_tensor,tr_cls_val_at_label_tensor,
                                               te_data_tensor,te_label_tensor,best_model,
                                               attack_model,criterion,attack_criterion,best_opt,
                                               attack_optimizer,epoch,use_cuda,batch_size=32)
-        
+
         is_best = at_val_acc >= best_at_val_acc
         best_at_val_acc = max(best_at_val_acc, at_val_acc)
 
