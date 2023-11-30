@@ -2,6 +2,10 @@ from purchase_models import *
 from purchase_normal_train import train, test
 from purchase_util import *
 from purchase_attack_train import train_attack, test_attack
+import os
+
+cwd = os.getcwd()
+print(cwd)
 
 def distillation_defense(train0=1,defense0=1,evaluate=1,tr_len=20000,ref_len=20000,use_cuda=True,batch_size=64,lr=0.0005,schedule=[30,80],gamma=0.5,tr_epochs=100,distil_batch_size=32,distil_lr=0.1,distil_schedule=[50,90,150],distil_gamma=0.5,distil_epochs=200,distil_temp=1.0,
     at_lr=0.0001,at_schedule=[100],at_gamma=0.5,at_epochs=200,n_classes=100, debug_ = "MEDIUM"):
@@ -10,7 +14,7 @@ def distillation_defense(train0=1,defense0=1,evaluate=1,tr_len=20000,ref_len=200
 
     print('generating data for distillation defense...')
 
-    data_loc='home/khanhhiep/Code/Khanh/Security/AAAI21-MIA-Defense/purchase_data/'
+    data_loc='purchase_data/dataset_purchase/transactions.csv'
     tr_frac=0.5
     val_frac=0.25
     te_frac=0.25
@@ -20,7 +24,9 @@ def distillation_defense(train0=1,defense0=1,evaluate=1,tr_len=20000,ref_len=200
 
     data_set = np.genfromtxt(data_loc, delimiter=',')
     X = data_set[:,1:].astype(np.float64)
+    print(X.shape)
     Y = (data_set[:,0]).astype(np.int32)-1
+    print(Y.shape)
     print('total data len: ',len(X))
 
     if not os.path.isfile('./purchase_shuffle.pkl'):
