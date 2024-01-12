@@ -2,8 +2,8 @@ from purchase_models import *
 
 import os
 
-# cwd = os.getcwd()
-# print(cwd)
+cwd = os.getcwd()
+print(cwd)
 
 '''
 The function will import data from given location and distribute per_user_data_len amount of 
